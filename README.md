@@ -1,12 +1,20 @@
-# 🌍 **Website Đặt Tour Du Lịch** 🌍
+# 🎥 Video Demo
+
+Để xem video hướng dẫn và demo các tính năng của website, bạn có thể truy cập đường dẫn sau:
+
+[📺 Xem Video Demo tại đây](https://drive.google.com/drive/folders/1RYumN347Si5X9wnw74CprwWo-QeCwXhx?usp=sharing)
+
+---
+
+# 🌍 Website Đặt Tour Du Lịch 🌍
 
 ## 🎯 Mô Tả Dự Án
 
-Website Đặt Tour Du Lịch là nền tảng trực tuyến giúp người dùng dễ dàng tìm kiếm và đặt các tour du lịch. Dự án tích hợp nhiều tính năng như giỏ hàng, thanh toán qua MOMO, đăng nhập nhanh với Google, Facebook và GitHub, cùng với việc cung cấp thông tin thời tiết theo thời gian thực từ **OpenWeather**.
+Website Đặt Tour Du Lịch là nền tảng trực tuyến giúp người dùng dễ dàng tìm kiếm và đặt các tour du lịch. Dự án tích hợp nhiều tính năng như giỏ hàng, thanh toán qua **MOMO**, đăng nhập nhanh với **Google**, **Facebook** và **GitHub**, cùng với việc cung cấp thông tin thời tiết theo thời gian thực từ **OpenWeather**.
 
 Ngoài ra, hệ thống còn cho phép người dùng kiểm tra lịch sử giao dịch của mình, giúp tối ưu hóa trải nghiệm người dùng.
 
-### 🚀 **Tính Năng Chính**:
+### 🚀 Tính Năng Chính
 - **Đăng nhập nhanh chóng** qua **Google**, **Facebook**, và **GitHub**.
 - **Giỏ hàng và thanh toán** qua **MOMO**.
 - **Thống kê dữ liệu** trực quan với **Chart.js**.
@@ -16,7 +24,7 @@ Ngoài ra, hệ thống còn cho phép người dùng kiểm tra lịch sử gia
 
 ---
 
-## ⚙️ **Công Nghệ Sử Dụng**
+## ⚙️ Công Nghệ Sử Dụng
 
 ### Backend:
 - **ASP.NET Core**: Framework chính để phát triển API và xử lý logic nghiệp vụ.
@@ -34,7 +42,7 @@ Ngoài ra, hệ thống còn cho phép người dùng kiểm tra lịch sử gia
 
 ---
 
-## 📋 **Chức Năng CRUD**
+## 📋 Chức Năng CRUD
 
 Website hỗ trợ các chức năng CRUD cho:
 - **CRUD Sản Phẩm Tour**: Tạo, đọc, cập nhật, xóa các sản phẩm tour du lịch.
@@ -42,45 +50,44 @@ Website hỗ trợ các chức năng CRUD cho:
 
 ---
 
-## 💳 **Giỏ Hàng và Thanh Toán**
+## 💳 Giỏ Hàng và Thanh Toán
 
 - **Giỏ hàng**: Người dùng có thể thêm các tour vào giỏ hàng và tiến hành thanh toán.
 - **Thanh toán qua MOMO**: Tích hợp MOMO API để thực hiện giao dịch thanh toán nhanh chóng.
 
 ---
 
-## 📊 **Thống Kê và Biểu Đồ**
+## 📊 Thống Kê và Biểu Đồ
 
 - **Biểu đồ thống kê**: Sử dụng **Chart.js** để tạo các biểu đồ trực quan về số liệu giao dịch và doanh thu.
 
 ---
 
-## 🌦️ **Dự Báo Thời Tiết**
+## 🌦️ Dự Báo Thời Tiết
 
 - **OpenWeather API**: Cung cấp thông tin thời tiết theo thời gian thực, giúp người dùng cập nhật tình hình thời tiết để lên kế hoạch cho chuyến đi.
 
 ---
 
-## 🌍 **Hỗ Trợ Đa Ngôn Ngữ**
+## 🌍 Hỗ Trợ Đa Ngôn Ngữ
 
 Hệ thống hỗ trợ nhiều ngôn ngữ để phục vụ người dùng toàn cầu, từ tiếng Việt đến tiếng Anh và các ngôn ngữ khác.
 
 ---
 
-## 📅 **Lịch Sử Giao Dịch**
+## 📅 Lịch Sử Giao Dịch
 
 Người dùng có thể kiểm tra lịch sử giao dịch của mình để theo dõi tất cả các lần đặt tour và thanh toán đã thực hiện.
 
 ---
 
-## 🛠️ **Cài Đặt và Chạy Dự Án**
+## 🛠️ Cài Đặt và Chạy Dự Án
 
-### Yêu Cầu Hệ Thống:
-- **.NET 6+** (hoặc .NET 7)
+### Yêu Cầu Hệ Thống
+- **.NET 8** 
 - **SQL Server 2019+**
-- **Node.js** (nếu sử dụng frontend React)
 
-### Các Bước Cài Đặt:
+### Các Bước Cài Đặt
 
 1. **Clone repository**:
    ```bash
