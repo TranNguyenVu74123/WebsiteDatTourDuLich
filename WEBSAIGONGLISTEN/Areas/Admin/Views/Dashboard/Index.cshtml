@@ -1,0 +1,280 @@
+﻿@* @{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row">
+    <div class="col-6">
+        <h3>Biểu đồ cột</h3>
+        <canvas id="barChart" width="200" height="110" style="width: 197px; height: 110px;"></canvas>
+    </div>
+
+    <div class="col-6">
+        <h3>Biểu đồ tròn</h3>
+        <canvas id="pieChart" width="200" height="110" style="width: 197px; height: 110px;"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Dashboard/GetTotalOders",
+            data: "",
+            contextType: "application/json; charset=utf8",
+            dataType: "json",
+            success: OnSuccess,
+        });
+
+        function OnSuccess(data) {
+            const barChart = document.getElementById('barChart');
+            const pieChart = document.getElementById('pieChart');
+
+            var _data = data;
+            var _labels = _data[0];
+            var _ChartData = _data[1];
+            var colors = [
+                'rgba(255, 255, 0, 0.4)',     // Màu vàng
+                'rgba(255, 182, 193, 0.4)',  // Màu hồng nhạt
+                'rgba(135, 206, 235, 0.4)', // Màu xanh da trời nhạt
+                'rgba(152, 251, 152, 0.4)',  // Màu xanh lá cây nhạt
+                'rgba(255, 228, 196, 0.4)' // Màu da cam nhạt
+            ];
+
+            new Chart(barChart,
+                {
+                    type: 'bar',
+                    data: {
+                        labels: _labels,
+                        datasets: [{
+                            backgroundColor: colors,
+                            data: _ChartData,
+                            borderWidth: 1,
+                        }]
+                    }
+                });
+
+            new Chart(pieChart,
+                {
+                    type: 'pie',
+                    data: {
+                        labels: _labels,
+                        datasets: [{
+                            backgroundColor: colors,
+                            data: _ChartData,
+                            borderWidth: 1,
+                        }]
+                    }
+                });
+        }
+    });
+</script>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+ *@
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+    <p class="text-center text-muted">Thống kê đơn đặt hàng theo danh mục</p>
+
+    <div id="loading" class="text-center mt-4">
+        <p class="text-info">Đang tải dữ liệu, vui lòng đợi...</p>
+    </div>
+    <div id="error" class="text-center mt-4 text-danger d-none">
+        <p>Không thể tải dữ liệu. Vui lòng thử lại sau.</p>
+    </div>
+
+    <div class="row mt-5 d-none" id="chartContainer">
+        <!-- Biểu đồ cột -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header text-center bg-primary text-white">
+                    Biểu đồ cột
+                </div>
+                <div class="card-body">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ tròn -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header text-center bg-success text-white">
+                    Biểu đồ tròn
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ đường -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header text-center bg-info text-white">
+                    Biểu đồ đường
+                </div>
+                <div class="card-body">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ radar -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header text-center bg-warning text-dark">
+                    Biểu đồ radar
+                </div>
+                <div class="card-body">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS -->
+<style>
+    .container {
+        max-width: 1200px;
+    }
+
+    .card {
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    canvas {
+        display: block;
+        margin: 0 auto;
+        max-height: 300px;
+        max-width: 100%;
+    }
+
+    .text-center {
+        margin-top: 10px;
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+    }
+</style>
+
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const chartColors = [
+            'rgba(255, 99, 132, 0.6)', // Đỏ
+            'rgba(54, 162, 235, 0.6)', // Xanh dương
+            'rgba(255, 206, 86, 0.6)', // Vàng
+            'rgba(75, 192, 192, 0.6)', // Xanh ngọc
+            'rgba(153, 102, 255, 0.6)', // Tím
+        ];
+
+        // Load dữ liệu qua AJAX
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Dashboard/GetTotalOders",
+            dataType: "json",
+            success: function (data) {
+                $('#loading').addClass('d-none');
+                $('#chartContainer').removeClass('d-none');
+                renderCharts(data);
+            },
+            error: function () {
+                $('#loading').addClass('d-none');
+                $('#error').removeClass('d-none');
+            },
+        });
+
+        // Hàm vẽ biểu đồ
+        function renderCharts(data) {
+            const labels = data[0];
+            const chartData = data[1];
+
+            // Biểu đồ cột
+            new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số lượng đặt hàng',
+                        data: chartData,
+                        backgroundColor: chartColors,
+                        borderColor: chartColors.map(c => c.replace('0.6', '1')),
+                        borderWidth: 1,
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // Biểu đồ tròn
+            new Chart(document.getElementById('pieChart'), {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: chartColors,
+                        borderColor: chartColors.map(c => c.replace('0.6', '1')),
+                        borderWidth: 1,
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // Biểu đồ đường
+            new Chart(document.getElementById('lineChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số lượng đặt hàng',
+                        data: chartData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.4)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // Biểu đồ radar
+            new Chart(document.getElementById('radarChart'), {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số lượng đặt hàng',
+                        data: chartData,
+                        backgroundColor: 'rgba(255, 206, 86, 0.4)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        fill: true,
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+    });
+</script>

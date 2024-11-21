@@ -1,0 +1,84 @@
+﻿@model WEBSAIGONGLISTEN.Models.Booking
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán Momo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-image: url('https://th.bing.com/th/id/OIP.pC1bRiGhKgB7-wUTkgbULAHaEK?rs=1&pid=ImgDetMain');
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group textarea {
+            resize: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+
+        .heading {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+    </style>
+    <!-- Thêm thư viện Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 form-container">
+                <h2 class="heading">Thanh toán Momo</h2>
+                <form action="/Booking/CreatePaymentUrl" id="frmCreateOrder" method="POST">
+                    <!-- Tên khách hàng -->
+                    <div class="form-group">
+                        <label for="FullName">Tên khách hàng</label>
+                        <input class="form-control" id="FullName" name="FullName" type="text" required />
+                    </div>
+
+                    <!-- Số tiền -->
+                    <div class="form-group">
+                        <label for="Amount">Số tiền</label>
+                        <input class="form-control" id="Amount" name="Amount" type="text" value="@Model.TotalPrice" readonly />
+                    </div>
+
+                    <!-- Nội dung thanh toán -->
+                    <div class="form-group">
+                        <label for="OrderInfo">Nội dung thanh toán</label>
+                        <textarea class="form-control" cols="20" id="OrderInfo" name="OrderInfo" rows="3">Chúc bạn đi chơi zui zẻ</textarea>
+                    </div>
+
+                    <!-- Nút thanh toán -->
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-credit-card"></i> Thanh toán (Checkout)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript (jQuery và Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

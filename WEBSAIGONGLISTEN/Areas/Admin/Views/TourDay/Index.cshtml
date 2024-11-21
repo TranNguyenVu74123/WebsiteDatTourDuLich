@@ -1,0 +1,62 @@
+﻿@model IEnumerable<WEBSAIGONGLISTEN.Models.TourDay>
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Danh Sách Ngày Tour";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h4>Danh Sách Ngày Tour</h4>
+        <a asp-action="Create" class="btn btn-success">Thêm Ngày Tour Mới</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Ngày Thứ</th>
+                <th scope="col">Mô Tả</th>
+                <th>Hình ảnh</th>
+                <th scope="col">Danh Mục</th>
+                <th scope="col">Sản Phẩm</th>
+                <th scope="col" class="text-center">Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var tourDay in Model)
+                {
+                    <tr>
+                        <td>@tourDay.Id</td>
+                        <td>@tourDay.DayNumber</td>
+                        <td>@tourDay.Description</td>
+                        <td><img src="@tourDay.ImageUrl" alt="Product Image" style="max-width: 100px;"></td>
+                        <td>@tourDay.Category?.Name</td>
+                        <td>@tourDay.Product?.Name</td>
+                        <td class="text-center">
+                            <a asp-action="Details" asp-route-id="@tourDay.Id" class="btn btn-info btn-sm">Chi Tiết</a>
+                            <a asp-action="Edit" asp-route-id="@tourDay.Id" class="btn btn-primary btn-sm">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@tourDay.Id" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa?');">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">Không có ngày tour nào để hiển thị</td> <!-- Đã điều chỉnh số cột cho chính xác -->
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

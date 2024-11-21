@@ -1,0 +1,39 @@
+﻿@model WEBSAIGONGLISTEN.Models.TourDay
+
+@{
+    ViewData["Title"] = "Xác Nhận Xóa Ngày Tour";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Bạn có chắc chắn muốn xóa?</h4>
+        <p>Bạn đang chuẩn bị xóa ngày tour sau đây:</p>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Ngày</dt>
+        <dd class="col-sm-9">@Model.DayNumber</dd>
+
+        <dt class="col-sm-3">Mô Tả</dt>
+        <dd class="col-sm-9">@Model.Description</dd>
+
+        <dt class="col-sm-3">Danh Mục</dt>
+        <dd class="col-sm-9">@Model.Category?.Name</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

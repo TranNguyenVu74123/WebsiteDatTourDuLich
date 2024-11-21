@@ -1,0 +1,21 @@
+﻿@model WEBSAIGONGLISTEN.Models.Booking
+
+<div class="container">
+    <h2 class="text-center">Xác nhận thanh toán</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <h4>Sản phẩm: @Model.Product.Name</h4>
+            <p>Số lượng dưới 2 tuổi: @Model.QuantityUnder2</p>
+            <p>Số lượng từ 2 đến 10 tuổi: @Model.Quantity2To10</p>
+            <p>Số lượng trên 10 tuổi: @Model.QuantityAbove10</p>
+            <h4>Tổng tiền: @Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</h4>
+
+            <form asp-action="CompletePayment" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-success">Thanh toán</button>
+            </form>
+        </div>
+    </div>
+</div>
+

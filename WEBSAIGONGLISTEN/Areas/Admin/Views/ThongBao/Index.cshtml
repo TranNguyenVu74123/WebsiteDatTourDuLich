@@ -1,0 +1,32 @@
+﻿@model IEnumerable<WEBSAIGONGLISTEN.Models.ThongBao>
+
+<h2>Danh sách Thông Báo</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Booking ID</th>
+            <th>User ID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var thongBao in Model)
+        {
+            <tr>
+                <td>@thongBao.Id</td>
+                <td>@thongBao.Description</td>
+                <td>@thongBao.UserId</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@thongBao.Id" class="btn btn-info">Chi tiết</a>
+                    <a asp-action="Edit" asp-route-id="@thongBao.Id" class="btn btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@thongBao.Id" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Tạo Thông Báo Mới</a>

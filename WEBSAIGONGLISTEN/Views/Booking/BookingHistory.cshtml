@@ -1,0 +1,220 @@
+﻿@* @model List<WEBSAIGONGLISTEN.Models.Booking>
+
+@{
+    ViewData["Title"] = "Lịch sử đặt tour";
+}
+
+<h2>Lịch sử đặt tour</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Tour</th>
+                <th>Số lượng dưới 2</th>
+                <th>Số lượng từ 2 đến 10</th>
+                <th>Số lượng trên 10</th>
+                <th>Tổng giá trị</th>
+                <th>Ngày đặt</th>
+                <th>Trạng thái</th>
+                <th>Tên người đặt</th> 
+                <th>Hủy tour</th> 
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td> <!-- Sử dụng Id thay vì BookingId -->
+                    <td>@item.Product.Name</td> <!-- Lấy tên Tour từ Product -->
+                    <td>@item.QuantityUnder2</td>
+                    <td>@item.Quantity2To10</td>
+                    <td>@item.QuantityAbove10</td>
+                    <td>@item.TotalPrice.ToString("C")</td> <!-- Hiển thị giá trị dưới dạng tiền tệ -->
+                    <td>@item.BookingDate.ToShortDateString()</td> <!-- Hiển thị ngày đặt -->
+                    <td>@item.Status</td> <!-- Hiển thị trạng thái của booking -->
+                    <td>@item.ApplicationUser.UserName</td> <!-- Lấy tên người đặt từ ApplicationUser -->
+                    <td>
+                        @if (item.Status == "Pending")
+                        {
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal"
+                                    data-id="@item.Id">
+                                Hủy
+                            </button>
+                        }
+                        else if (item.Status == "Canceled")
+                        {
+                            <span class="text-muted">Đã hủy</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <!-- Modal for Cancel Booking -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="/Booking/CancelBooking">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelModalLabel">Hủy Booking</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="cancelBookingId" />
+                        <div class="mb-3">
+                            <label for="cancellationReason" class="form-label">Lý do hủy:</label>
+                            <textarea class="form-control" name="cancellationReason" id="cancellationReason" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var cancelModal = document.getElementById('cancelModal');
+        cancelModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var bookingId = button.getAttribute('data-id');
+            var inputId = cancelModal.querySelector('#cancelBookingId');
+            inputId.value = bookingId;
+        });
+    </script>
+
+
+}
+else
+{
+    <p>Không có lịch sử đặt tour.</p>
+}
+ *@
+
+@model List<WEBSAIGONGLISTEN.Models.Booking>
+
+@{
+    ViewData["Title"] = "Lịch sử đặt tour";
+}
+
+<h2>Lịch sử đặt tour</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Tour</th>
+                <th>Số lượng dưới 2</th>
+                <th>Số lượng từ 2 đến 10</th>
+                <th>Số lượng trên 10</th>
+                <th>Tổng giá trị</th>
+                <th>Ngày đặt</th>
+                <th>Trạng thái</th>
+                <th>Tên người đặt</th>
+                <th>Hủy tour</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Product?.Name ?? "Không xác định"</td>
+                    <td>@item.QuantityUnder2</td>
+                    <td>@item.Quantity2To10</td>
+                    <td>@item.QuantityAbove10</td>
+                    <td>@item.TotalPrice.ToString("C")</td>
+                    <td>@item.BookingDate.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (item.Status == "Pending")
+                        {
+                            <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                        }
+                        else if (item.Status == "Canceled")
+                        {
+                            <span class="badge bg-secondary">Đã hủy</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Hoàn thành</span>
+                        }
+                    </td>
+                    <td>@item.ApplicationUser?.UserName ?? "Khách"</td>
+                    <td>
+                        @if (item.Status == "Pending")
+                        {
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal"
+                                    data-id="@item.Id" data-tour="@item.Product?.Name">
+                                Hủy
+                            </button>
+                        }
+                        else if (item.Status == "Canceled")
+                        {
+                            <span class="text-muted">Đã hủy</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Modal for Cancel Booking -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="/Booking/CancelBooking">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelModalLabel">Hủy Booking</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bạn có chắc chắn muốn hủy tour <strong id="tourName"></strong>?</p>
+                        <input type="hidden" name="id" id="cancelBookingId" />
+                        <div class="mb-3">
+                            <label for="cancellationReason" class="form-label">Lý do hủy:</label>
+                            <textarea class="form-control" name="cancellationReason" id="cancellationReason" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var cancelModal = document.getElementById('cancelModal');
+        cancelModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var bookingId = button.getAttribute('data-id');
+            var tourName = button.getAttribute('data-tour');
+            var inputId = cancelModal.querySelector('#cancelBookingId');
+            var tourNameElement = cancelModal.querySelector('#tourName');
+
+            inputId.value = bookingId;
+            tourNameElement.textContent = tourName;
+        });
+    </script>
+}
+else
+{
+    <p>Không có lịch sử đặt tour.</p>
+}

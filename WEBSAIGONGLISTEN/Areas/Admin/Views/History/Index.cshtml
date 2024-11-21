@@ -1,0 +1,169 @@
+﻿@model IEnumerable<WEBSAIGONGLISTEN.Models.Booking>
+
+@{
+    ViewData["Title"] = "Lịch sử đặt chỗ";
+}
+
+<div class="container my-4">
+    <h2 class="text-center text-primary mb-4">Lịch sử đặt chỗ</h2>
+
+    <!-- Form xuất Excel và PDF -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <form asp-action="ExportToExcel" method="post" class="d-inline">
+                <button type="submit" class="btn btn-success me-2">
+                    <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+                </button>
+            </form>
+            <form asp-action="ExportToPdf" method="post" class="d-inline">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-file-earmark-pdf"></i> Xuất PDF
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bảng hiển thị danh sách đặt chỗ -->
+    <div class="table-responsive">
+        <table class="table table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Người dùng</th>
+                    <th scope="col">Sản phẩm</th>
+                    <th scope="col">Ngày đặt</th>
+                    <th scope="col">Tổng tiền</th>
+                    <th scope="col">< 2</th>
+                    <th scope="col">2-10</th>
+                    <th scope="col">> 10</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Lý do hủy</th>
+                    <th scope="col">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var booking in Model)
+                    {
+                        <tr>
+                            <td>@booking.Id</td>
+                            <td>@booking.ApplicationUser?.UserName</td>
+                            <td>@booking.Product?.Name</td>
+                            <td>@booking.BookingDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@booking.TotalPrice.ToString("C")</td>
+                            <td>@booking.QuantityUnder2</td>
+                            <td>@booking.Quantity2To10</td>
+                            <td>@booking.QuantityAbove10</td>
+                            <td>
+                                <span class="badge bg-@(
+                                    booking.Status == "Chờ xác nhận" ? "warning" :
+                                    booking.Status == "Đã xác nhận" ? "success" : "danger")">
+                                    @booking.Status
+                                </span>
+                            </td>
+                            <td>@booking.CancellationReason</td>
+                            <td>
+                                @if (booking.Status == "Chờ xác nhận")
+                                {
+                                    <form method="post" asp-action="ProcessCancellation" class="d-inline">
+                                        <input type="hidden" name="id" value="@booking.Id" />
+                                        <textarea name="adminResponse" placeholder="Phản hồi của quản trị" class="form-control mb-2"></textarea>
+                                        <button name="approve" value="true" class="btn btn-success btn-sm">
+                                            Chấp nhận
+                                        </button>
+                                        <button name="approve" value="false" class="btn btn-danger btn-sm">
+                                            Từ chối
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a asp-action="Delete" asp-route-id="@booking.Id" class="btn btn-danger btn-sm">
+                                        Xóa
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="11" class="text-muted">Không tìm thấy đặt chỗ nào.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- CSS -->
+<style>
+    .container {
+        max-width: 1200px;
+    }
+
+    h2 {
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+        .btn:hover {
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .table thead th {
+        font-size: 1rem;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+        border-radius: 12px;
+    }
+
+    textarea {
+        resize: none;
+        min-height: 50px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 8px;
+        width: 100%;
+    }
+
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+</style>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll('.btn-danger');
+
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                const confirmDelete = confirm("Bạn có chắc chắn muốn xóa mục này?");
+                if (!confirmDelete) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,113 @@
+﻿@model IEnumerable<WEBSAIGONGLISTEN.Models.ThongBao>
+
+@{
+    ViewData["Title"] = "Thông Báo";
+}
+
+<!-- Kết nối các thư viện CSS và JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<h2 class="text-center my-4">@ViewData["Title"]</h2>
+
+<div class="container">
+    <!-- Bảng thông báo -->
+    <table class="table table-striped table-hover" id="thongBaoTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Tên người đặt</th>
+                <th>Mô Tả</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var thongBao in Model)
+            {
+                <tr data-description="@thongBao.Description" data-username="@thongBao.ApplicationUser?.UserName">
+                    <td>@thongBao.ApplicationUser?.UserName</td>
+                    <td>@thongBao.Description</td>
+                    <td>
+                        <button class="btn btn-info btn-sm showDetailsBtn">
+                            <i class="fas fa-info-circle"></i> Chi tiết
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Modal hiển thị chi tiết thông báo -->
+    <div class="modal fade" id="thongBaoModal" tabindex="-1" aria-labelledby="thongBaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="thongBaoModalLabel">Chi tiết thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Người đặt:</strong> <span id="username"></span><br>
+                    <strong>Mô tả:</strong> <span id="description"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS để cải thiện giao diện -->
+<style>
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .btn-info {
+        transition: background-color 0.3s;
+    }
+
+        .btn-info:hover {
+            background-color: #17a2b8;
+color: white;
+        }
+
+    .modal-body span {
+        font-weight: bold;
+    }
+</style>
+
+<script>
+    // jQuery để xử lý các sự kiện
+    $(document).ready(function () {
+        // Khi nhấp vào nút "Chi tiết"
+        $(".showDetailsBtn").click(function () {
+            var row = $(this).closest("tr"); // Tìm dòng tương ứng với nút đã nhấp
+            var description = row.data("description");
+            var username = row.data("username");
+
+            // Cập nhật nội dung modal với thông tin từ dòng được nhấp
+            $("#username").text(username);
+            $("#description").text(description);
+
+            // Mở modal
+            $("#thongBaoModal").modal('show');
+        });
+
+        // Ẩn thông báo nếu không có thông báo nào
+        if ($("#thongBaoTable tbody tr").length === 0) {
+            var noDataMessage = "<tr><td colspan='3' class='text-center'>Không có thông báo nào.</td></tr>";
+            $("#thongBaoTable tbody").html(noDataMessage);
+        }
+    });
+</script>

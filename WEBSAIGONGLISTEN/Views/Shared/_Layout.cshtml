@@ -1,0 +1,322 @@
+﻿@{
+    string currentPagePath = Context.Request.Path;
+    string loginPagePath = "/Identity/Account/Login";
+    string registerPagePath = "/Identity/Account/Register";
+    bool isLoginPage = currentPagePath.Contains(loginPagePath);
+    bool isRegisterPage = currentPagePath.Contains(registerPagePath);
+
+    ViewData["IsLoginPage"] = isLoginPage;
+    ViewData["IsRegisterPage"] = isRegisterPage;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+    <!-- Thêm Font Awesome để hiển thị các biểu tượng mạng xã hội -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+<body class="d-flex flex-column h-100 light-mode">
+    <header class="navbar navbar-expand navbar-dark sticky-top flex-column flex-md-row bd-navbar" style="background-color: white;">
+        <div class="container">
+            @if (!(bool)ViewData["IsLoginPage"] && !(bool)ViewData["IsRegisterPage"])
+            {
+                <a class="navbar-brand mr-0 mr-md-2" href="/" aria-label="Bootstrap">
+                    <img src="../../LayoutAdmin/assets/images/saigon-glisten.jpg" alt="logo" style="width: 70px; height: 70px;" />
+                </a>
+            }
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav bd-navbar-nav flex-row me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                    </li>
+                    @if (!(bool)ViewData["IsLoginPage"] && !(bool)ViewData["IsRegisterPage"])
+                    {
+                       
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="weatherForecast">Dự báo thời tiết</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area=""  asp-controller="Booking" asp-action="BookingHistory" class="nav-link">Lịch Sử Đặt Tour</a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ThongBao" asp-action="Index" class="nav-link">Thông báo</a>
+                        </li>
+
+                        
+                    }
+
+                    <!-- Phần dịch ngôn ngữ -->
+                    <li class="nav-item mx-2">
+                        <div id="google_translate_element"></div>
+
+                        <script type="text/javascript">
+                            function googleTranslateElementInit() {
+                                new google.translate.TranslateElement({
+                                    pageLanguage: 'vi',
+                                    includedLanguages: 'en,fr,de,es,zh-CN,ja,ko,vi',
+                                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                                }, 'google_translate_element');
+                            }
+                        </script>
+                        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                    </li>
+
+                    
+
+                    <!-- Nút chuyển đổi chế độ -->
+                    <li class="nav-item mx-2">
+                        <button id="toggleMode" class="btn btn-outline-dark"><i class="fas fa-moon"></i></button>
+                    </li>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Company"))
+                    {
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="">Giao diện Quản Lý</a>
+                        </li>
+                    }
+                </ul>
+
+                <partial name="_LoginPartial" />
+
+
+                @* @if (!(bool)ViewData["IsLoginPage"] && !(bool)ViewData["IsRegisterPage"] && User.IsInRole("Customer"))
+                {
+                    <form asp-action="Index" asp-controller="ShoppingCart" class="d-flex">
+                        <button class="btn btn-outline-dark" type="submit">
+                            <i class="fas fa-suitcase me-1"></i>
+                            Tour của bạn
+                        </button>
+                    </form>
+                } *@
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-shrink-0">
+        <div class="container container-custom">
+            @RenderBody()
+        </div>
+    </main>
+
+    <style>
+        #backToTop {
+            display: none; /* Nút ẩn mặc định */
+            font-size: 18px; /* Kích thước chữ mặc định */
+            border-radius: 50%; /* Làm nút thành hình tròn */
+            width: 60px; /* Kích thước nút */
+            height: 60px; /* Kích thước nút */
+            padding: 15px;
+            text-align: center;
+            line-height: 30px;
+            background-color: #007bff; /* Màu nền */
+            color: white; /* Màu chữ */
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Đảm bảo nút ở trên cùng */
+        }
+
+            #backToTop:hover {
+                background-color: #0056b3; /* Màu nền khi hover */
+            }
+
+    </style>
+    <!-- Nút Back to Top -->
+    <button id="backToTop" class="btn btn-primary position-fixed bottom-0 end-0 m-4" style="display: none;">
+        <i class="fas fa-arrow-up"></i> <!-- Biểu tượng mũi tên lên -->
+    </button>
+
+
+    <footer class="footer mt-auto py-4 bg-dark text-light">
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <!-- Logo và mô tả -->
+                <div class="col-12 col-md-3 text-center text-md-start mb-3 mb-md-0">
+                    <img src="~/LayoutAdmin/assets/images/saigon-glisten.jpg" alt="Logo" class="mb-3" style="max-width: 120px;">
+                    <p>© 2024 - SAIGON GLISTEN - Nơi đưa bạn đến với những chuyến du lịch thú vị.</p>
+                </div>
+
+                <!-- Liên kết nhanh -->
+                <div class="col-12 col-md-3 text-center mb-3 mb-md-0">
+                    <h5 class="text-uppercase">Liên kết nhanh</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Trang chủ</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Dịch vụ</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Liên hệ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Về chúng tôi (Mô tả ngắn) -->
+                <div class="col-12 col-md-3 text-center mb-3 mb-md-0">
+                    <h5 class="text-uppercase"><a href="#" class="text-light text-decoration-none">Về chúng tôi</a></h5>
+                    <p>Saigon Glisten là một công ty du lịch hàng đầu tại TP.HCM, chuyên tổ chức các chuyến du lịch chất lượng, đưa du khách khám phá vẻ đẹp của Việt Nam và thế giới.</p>
+                </div>
+
+                <!-- Thông tin liên hệ và mạng xã hội -->
+                <div class="col-12 col-md-3 text-center text-md-end">
+                    <h5 class="text-uppercase">Liên hệ</h5>
+                    <p>Email: info@dulichvietnam.com</p>
+                    <p>Điện thoại: 0123 456 789</p>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="https://x.com/home?lang=vi" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.youtube.com/" class="text-light"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Owl Carousel JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    
+    <!-- FancyBox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/LayoutHome/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    @RenderSection("Styles", required: false)
+
+
+
+    <script>
+        $(document).ready(function () {
+            // Mặc định chế độ sáng
+            $('body').addClass('light-mode');
+
+            // Nút chuyển đổi chế độ
+            $('#toggleMode').click(function () {
+                $('body').toggleClass('dark-mode light-mode');
+
+                // Cập nhật biểu tượng khi chuyển đổi
+                if ($('body').hasClass('dark-mode')) {
+                    $('#toggleMode').html('<i class="fas fa-sun"></i>');
+                } else {
+                    $('#toggleMode').html('<i class="fas fa-moon"></i>');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // Lấy phần tử nút
+        const backToTopButton = document.getElementById("backToTop");
+
+        // Khi người dùng cuộn xuống 200px, hiển thị nút
+        window.onscroll = function () {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        };
+
+        // Khi nhấn vào nút, cuộn về đầu trang
+        backToTopButton.onclick = function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+    </script>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        const microphoneButton = document.getElementById('microphoneButton');
+        const searchInput = document.getElementById('searchInput');
+
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); // Sử dụng SpeechRecognition cho cả Chrome và các trình duyệt khác
+        recognition.continuous = false; // Dừng nhận diện khi xong
+        recognition.lang = 'vi-VN';
+
+        let isRecognizing = false;
+
+        recognition.onstart = () => {
+            microphoneButton.classList.add('active');
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript; // Lấy kết quả đầu tiên
+            searchInput.value = transcript; // Điền vào ô tìm kiếm
+            stopRecognition(); // Dừng nhận diện sau khi nhận xong
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Error occurred: ' + event.error);
+            stopRecognition();
+        };
+
+        recognition.onend = () => {
+            microphoneButton.classList.remove('active');
+            isRecognizing = false; // Đặt trạng thái nhận diện là false
+        };
+
+        microphoneButton.addEventListener('click', () => {
+            if (isRecognizing) {
+                stopRecognition();
+            } else {
+                startRecognition();
+            }
+        });
+
+        function startRecognition() {
+            recognition.start();
+            isRecognizing = true;
+        }
+
+        function stopRecognition() {
+            recognition.stop();
+        }
+    });
+</script>
+
+    <style>
+        /* Nền sáng */
+        body.light-mode {
+            background-color: white;
+            color: black;
+        }
+
+        /* Nền tối */
+        body.dark-mode {
+            background-color: #121212;
+            color: navy;
+        }
+
+        /* Căn chỉnh các nút Google Dịch, Dark/Light Mode và Tìm kiếm cách đều nhau */
+        .navbar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-mode {
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+    </style>
+</body>
+</html>

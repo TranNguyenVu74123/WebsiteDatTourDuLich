@@ -1,0 +1,77 @@
+﻿@model WEBSAIGONGLISTEN.Models.TourDay
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Chỉnh Sửa Ngày Tour";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group">
+                    <label asp-for="DayNumber" class="control-label">Ngày</label>
+                    <input asp-for="DayNumber" class="form-control" />
+                    <span asp-validation-for="DayNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Mô Tả</label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ImageUrl">Hình ảnh sản phẩm</label>
+                    <input type="file" asp-for="ImageUrl" class="form-control" id="imageInput" onchange="previewImage()" />
+                </div>
+                <div id="imagePreview" style="max-width:200px;"></div>
+
+
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="control-label">Danh Mục</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ProductId" class="control-label">Sản phẩm</label>
+                    <select asp-for="ProductId" class="form-control" asp-items="ViewBag.Products"></select>
+                    <span asp-validation-for="ProductId" class="text-danger"></span>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+                <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function previewImage() {
+        var preview = document.getElementById("imagePreview");
+        var file = document.getElementById("imageInput").files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

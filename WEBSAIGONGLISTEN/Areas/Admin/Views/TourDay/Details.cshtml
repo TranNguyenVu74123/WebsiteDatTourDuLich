@@ -1,0 +1,41 @@
+﻿@model WEBSAIGONGLISTEN.Models.TourDay
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Chi Tiết Ngày Tour";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Chi Tiết Ngày Tour</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Ngày Thứ</dt>
+                <dd class="col-sm-9">@Model.DayNumber</dd>
+
+                <dt class="col-sm-3">Mô Tả</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Danh Mục</dt>
+                <dd class="col-sm-9">@Model.Category?.Name</dd>
+
+                <dt class="col-sm-3">Sản Phẩm</dt>
+                <dd class="col-sm-9">@Model.Product?.Name</dd> <!-- Hiển thị thông tin sản phẩm -->
+            </dl>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Sửa</a>
+            <a asp-action="Index" class="btn btn-secondary">Trở về Danh Sách</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
